@@ -1,0 +1,86 @@
+﻿@model _19T1021007.DomainModels.Supplier
+@{
+
+}
+<div class="box box-primary">
+    <div class="box box-body">
+        @*form*@
+        <form class="form-horizontal" action="~/Supplier/Save" method="post">
+            <input type="hidden" name="SupplierID" value="@Model.SupplierID" />
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="">Tên nhà cung cấp:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" name="SupplierName" value="@Model.SupplierName" autofocus>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="">Tên giao dịch:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" value="@Model.ContactName" name="ContactName">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="">Địa chỉ:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" value="@Model.Address" name="Address">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="">Số điện thoại:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" value="@Model.Phone" name="Phone">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="">Quốc gia:</label>
+                <div class="col-sm-10">
+                    <select class="form-control" name="Country">
+                        <option>-- Chọn quốc gia --</option>
+                        @foreach (var item in _19T1021007.BusinessLayers.CommonDataService.ListOfCountries())
+                        {
+                            if (item.CountryName == Model.Country)
+                            {
+                                <option value="@item.CountryName" selected>@item.CountryName</option>
+                            }
+                            else
+                            {
+                                <option value="@item.CountryName">@item.CountryName</option>
+                            }
+
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="">Thành phố:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" value="@Model.City" name="City">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="">Mã bưu chính:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" value="@Model.PostalCode" name="PostalCode">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa fa-floppy-o"> Lưu dữ liệu</i>
+                    </button>
+                    <a href="~/Supplier" class="btn btn-warning">Quay lại</a>
+                </div>
+            </div>
+        </form>
+        @**@
+
+    </div>
+</div>
+
