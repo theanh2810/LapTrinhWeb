@@ -11,24 +11,26 @@ namespace _19T1021007.Web.Controllers
     public class CategoryController : Controller
     {
         private const int PAGE_SIZE = 10;
+        private const string CATEGORY_SEARCH = "CategorySearchCondition";
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public ActionResult Index(int page = 1, string searchValue = "")
+        public ActionResult Index()
         {
-            int rowCount = 0;
-            var data = CommonDataService.ListOfCategorys(page, PAGE_SIZE, searchValue, out rowCount);
-            int pageCount = rowCount / PAGE_SIZE;
-            if (rowCount % PAGE_SIZE > 0)
+            Models.PaginationSearchInput condition = Session[CATEGORY_SEARCH] as Models.PaginationSearchInput;
+
+            if (condition == null)
             {
-                pageCount++;
-            }
-            ViewBag.Page = page;
-            ViewBag.RowCount = rowCount;
-            ViewBag.PageCount = pageCount;
-            ViewBag.SearchValue = searchValue;
-            return View(data);
+                condition = new Models.PaginationSearchInput()
+                {
+                    Page = 1,
+                    PageSize = PAGE_SIZE,
+                    SearchValue = "",
+                };
+            };
+
+            return View(condition);
         }
         /// <summary>
         /// thêm loại hàng
@@ -87,6 +89,26 @@ namespace _19T1021007.Web.Controllers
                 CommonDataService.UpdateCategory(data);
             }
             return RedirectToAction("Index");
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="condition"></param>
+        /// <returns></returns>
+        public ActionResult Search(Models.PaginationSearchInput condition)
+        {
+            int rowCount = 0;
+            var data = CommonDataService.ListOfCategorys(condition.Page, condition.PageSize, condition.SearchValue, out rowCount);
+            var result = new Models.CategorySearchOutput()
+            {
+                Page = condition.Page,
+                PageSize = condition.PageSize,
+                SearchValue = condition.SearchValue,
+                RowCount = rowCount,
+                Data = data
+            };
+            Session["CategorySearchCondition"] = condition;
+            return View(result);
         }
     }
 }

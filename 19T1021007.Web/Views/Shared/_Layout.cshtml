@@ -54,7 +54,7 @@
 
         @{ Html.RenderPartial("_Footer"); }
         <!-- Control Sidebar -->
-       @* @{ Html.RenderPartial("_ControlSideBar"); }*@
+        @* @{ Html.RenderPartial("_ControlSideBar"); }*@
     </div>
     <!-- ./wrapper -->
     <!-- jQuery 3 -->
@@ -74,5 +74,6 @@
             $('.sidebar-menu').tree()
         })
     </script>
+    @RenderSection("scripts", required: false)
 </body>
 </html>
