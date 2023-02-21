@@ -1,0 +1,66 @@
+﻿@model _19T1021007.Web.Models.EmployeeSearchOutput
+@{
+    Layout = null;
+}
+<p>
+    Có <strong>@Model.RowCount</strong> nhân viên trong tổng số <strong>@Model.PageCount</strong> trang
+</p>
+<div class="table-responsive">
+    <table class="table table-bordered  table-hover table-striped">
+        <thead>
+            <tr class="bg-primary">
+
+
+                <th>Họ</th>
+                <th>Tên</th>
+                <th>Ngày sinh</th>
+                <th>Ảnh</th>
+                <th>Ghi chú</th>
+                <th>Email</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Data)
+            {
+                <tr>
+
+                    <td>@item.FirstName </td>
+                    <td>@item.LastName</td>
+                    <td>@item.BirthDate</td>
+                    @* <td ><img src="~/Themes/dist/img/user2-160x160.jpg" style="width:60px; text-align:center"></td>*@
+                    <td><img style="width:50px;height:50px;border-radius:6px" src="@item.Photo" alt="avatar" /></td>
+                    <td>@item.Notes </td>
+                    <td>@item.Email</td>
+
+                    <td class="text-right">
+                        <a href="~/Employee/Edit/@item.EmployeeID" class="btn btn-sm btn-primary" title="Sửa">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                        <a href="~/Employee/Delete/@item.EmployeeID" class="btn btn-sm btn-danger" title="Xóa">
+                            <i class="fa fa-trash"></i>
+
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="text-center">
+        <ul class="pagination">
+            @for (int i = 1; i <= Model.PageCount; i++)
+            {
+                if (i == Model.Page)
+                {
+
+                    <li class="active"><a href="#">@i</a></li>
+                }
+                else
+                {
+                    <li> <a href="javascript:;" onclick="doSearch(@i)">@i</a></li>
+                }
+            }
+        </ul>
+    </div>
+</div>
+
