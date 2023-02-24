@@ -51,13 +51,14 @@ namespace _19T1021007.Web.Controllers
         /// sửa nhà cung cấp
         /// </summary>
         /// <returns></returns>
-        public ActionResult Edit(string id)
+        public ActionResult Edit(int id = 0)
         {
+            if (id == 0)
+                return RedirectToAction("Index");
+            var data = CommonDataService.GetSupplier(id);
+            if (data == null)
+                return RedirectToAction("Index");
             ViewBag.Title = "Cập nhập nhà cung cấp";
-
-            int SupplierID = Convert.ToInt32(id);
-
-            var data = CommonDataService.GetSupplier(SupplierID);
             return View(data);
         }
         /// <summary>
@@ -80,10 +81,46 @@ namespace _19T1021007.Web.Controllers
             }
             
         }
+        /// <summary>
+        /// lưu
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Save(Supplier data)
         {
-            if(data.SupplierID == 0)
+            if (string.IsNullOrWhiteSpace(data.SupplierName))
+            {
+                ModelState.AddModelError(nameof(data.SupplierName), "Tên không được để trống");
+            }
+            if (string.IsNullOrWhiteSpace(data.ContactName))
+            {
+                ModelState.AddModelError(nameof(data.ContactName), "Tên giao dịch không được để trống");
+            }
+            if (string.IsNullOrWhiteSpace(data.Country))
+            {
+                ModelState.AddModelError(nameof(data.Country), "Quốc gia không được để trống");
+            }
+            data.Address = data.Address ?? "";
+            data.Phone = data.Phone ?? "";
+            data.City = data.City ?? "";
+            data.PostalCode = data.PostalCode ?? "";
+
+            if (!ModelState.IsValid)
+            {
+                if(data.SupplierID == 0)
+                {
+                    ViewBag.Title = "Bổ sung nhà cung cấp";
+                }
+                else
+                {
+                    ViewBag.Title = "Cập nhập nhà cung cấp";
+                }
+                return View("Edit", data);
+            }
+
+            if (data.SupplierID == 0)
             {
                 CommonDataService.AddSupplier(data);
             }

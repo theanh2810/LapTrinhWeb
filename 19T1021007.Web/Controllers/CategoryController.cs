@@ -50,12 +50,14 @@ namespace _19T1021007.Web.Controllers
         /// sửa loại hàng
         /// </summary>
         /// <returns></returns>
-        public ActionResult Edit(string id)
+        public ActionResult Edit(int id = 0)
         {
+            if (id == 0)
+                return RedirectToAction("Index");
+            var data = CommonDataService.GetCategory(id);
+            if (data == null)
+                return RedirectToAction("Index");
             ViewBag.Title = "Cập nhập loại hàng";
-            int CategoryID = Convert.ToInt32(id);
-
-            var data = CommonDataService.GetCategory(CategoryID);
             return View(data);
         }
         /// <summary>
@@ -78,8 +80,31 @@ namespace _19T1021007.Web.Controllers
             }
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Save(Category data)
         {
+            if (string.IsNullOrWhiteSpace(data.CategoryName))
+            {
+                ModelState.AddModelError(nameof(data.CategoryName), "Tên loại hàng không được để trống");
+            }
+            if (string.IsNullOrWhiteSpace(data.Description))
+            {
+                ModelState.AddModelError(nameof(data.Description), "Chi tiết loại hàng không được để trống");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                if (data.CategoryID == 0)
+                {
+                    ViewBag.Title = "Bổ sung loại hàng";
+                }
+                else
+                {
+                    ViewBag.Title = "Cập nhập loại hàng";
+                }
+                return View("Edit", data);
+            }
+
             if (data.CategoryID == 0)
             {
                 CommonDataService.AddCategory(data);

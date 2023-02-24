@@ -51,12 +51,14 @@ namespace _19T1021007.Web.Controllers
         /// sửa khách hàng
         /// </summary>
         /// <returns></returns>
-        public ActionResult Edit(string id)
+        public ActionResult Edit(int id = 0)
         {
+            if (id == 0)
+                return RedirectToAction("Index");
+            var data = CommonDataService.GetCustomer(id);
+            if (data == null)
+                return RedirectToAction("Index");
             ViewBag.Title = "Cập nhập khách hàng";
-            int CustomerID = Convert.ToInt32(id);
-
-            var data = CommonDataService.GetCustomer(CustomerID);
             return View(data);
         }
         /// <summary>
@@ -79,8 +81,39 @@ namespace _19T1021007.Web.Controllers
             }
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Save(Customer data)
         {
+            if (string.IsNullOrWhiteSpace(data.CustomerName))
+            {
+                ModelState.AddModelError(nameof(data.CustomerName), "Tên khách hàng không được để trống");
+            }
+            if (string.IsNullOrWhiteSpace(data.ContactName))
+            {
+                ModelState.AddModelError(nameof(data.ContactName), "Tên giao dịch không được để trống");
+            }
+            if (string.IsNullOrWhiteSpace(data.Country))
+            {
+                ModelState.AddModelError(nameof(data.Country), "Quốc gia không được để trống");
+            }
+            data.Address = data.Address ?? "";
+            data.City = data.City ?? "";
+            data.PostalCode = data.PostalCode ?? "";
+            data.Email = data.Email ?? "";
+
+            if (!ModelState.IsValid)
+            {
+                if (data.CustomerID == 0)
+                {
+                    ViewBag.Title = "Bổ sung khách hàng";
+                }
+                else
+                {
+                    ViewBag.Title = "Cập nhập khách hàng";
+                }
+                return View("Edit", data);
+            }
+
             if (data.CustomerID == 0)
             {
                 CommonDataService.AddCustomer(data);

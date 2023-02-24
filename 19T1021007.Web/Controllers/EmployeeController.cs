@@ -1,4 +1,5 @@
 ﻿using _19T1021007.BusinessLayers;
+using _19T1021007.DomainModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,25 +38,91 @@ namespace _19T1021007.Web.Controllers
         /// <returns></returns>
         public ActionResult Create()
         {
+            var data = new Employee()
+            {
+                EmployeeID = 0
+            };
             ViewBag.Title = "Bổ sung nhân viên";
-            return View("Edit");
+            return View("Edit", data);
         }
         /// <summary>
         /// sửa nhân viên
         /// </summary>
         /// <returns></returns>
-        public ActionResult Edit()
+        public ActionResult Edit(int id = 0)
         {
+            if (id == 0)
+                return RedirectToAction("Index");
+            var data = CommonDataService.GetEmployee(id);
+            if (data == null)
+                return RedirectToAction("Index");
             ViewBag.Title = "Cập nhập nhân viên";
-            return View();
+            return View(data);
         }
         /// <summary>
         /// xóa nhân viên
         /// </summary>
         /// <returns></returns>
-        public ActionResult Delete()
+        public ActionResult Delete(string id)
         {
-            return View();
+            int EmployeeID = Convert.ToInt32(id);
+
+            if (Request.HttpMethod == "POST")
+            {
+                CommonDataService.DeleteEmployee(EmployeeID);
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                var data = CommonDataService.GetEmployee(EmployeeID);
+                return View(data);
+            }
+        }
+        /// <summary>
+        /// lưu
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Save(Employee data)
+        {
+            if (string.IsNullOrWhiteSpace(data.FirstName))
+            {
+                ModelState.AddModelError(nameof(data.FirstName), "Họ không được để trống");
+            }
+            if (string.IsNullOrWhiteSpace(data.LastName))
+            {
+                ModelState.AddModelError(nameof(data.LastName), "Tên không được để trống");
+            }
+            
+            
+            data.Notes = data.Notes ?? "";
+            data.Photo = "Images\\" + data.Photo ?? "http://dummyimage.com/140x180.png/cc0000/ffffff&text=EmployeePhoto";
+            data.Email = data.Email ?? "";
+
+            if (!ModelState.IsValid)
+            {
+                if (data.EmployeeID == 0)
+                {
+                    ViewBag.Title = "Bổ sung nhân viên";
+                }
+                else
+                {
+                    ViewBag.Title = "Cập nhập nhân viên";
+                }
+                return View("Edit", data);
+            }
+
+            if (data.EmployeeID == 0)
+            {
+                CommonDataService.AddEmployee(data);
+            }
+            else
+            {
+                CommonDataService.UpdateEmployee(data);
+            }
+            return RedirectToAction("Index");
         }
         /// <summary>
         /// 
@@ -66,6 +133,7 @@ namespace _19T1021007.Web.Controllers
         {
             int rowCount = 0;
             var data = CommonDataService.ListOfEmployees(condition.Page, condition.PageSize, condition.SearchValue, out rowCount);
+            
             var result = new Models.EmployeeSearchOutput()
             {
                 Page = condition.Page,

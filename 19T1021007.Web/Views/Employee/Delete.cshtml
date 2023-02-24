@@ -1,4 +1,4 @@
-﻿
+﻿@model _19T1021007.DomainModels.Employee
 @{
     ViewBag.Title = "Xóa nhân viên";
 }
@@ -6,39 +6,39 @@
 <div class="box box-danger">
     <div class="box box-body">
         @*form*@
-        <form class="form-horizontal" action="">
+        <form class="form-horizontal" action="~/Employee/Delete/@Model.EmployeeID" method="post">
             <div class="form-group">
                 <label class="control-label col-sm-2" for="">Họ:</label>
                 <div class="col-sm-10">
-                    <p class="form-control-static">Nguyễn</p>
+                    <p class="form-control-static">@Model.FirstName</p>
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="control-label col-sm-2" for="">Tên:</label>
                 <div class="col-sm-10">
-                    <p class="form-control-static">Thế Anh</p>
+                    <p class="form-control-static">@Model.LastName</p>
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="control-label col-sm-2" for="">Ngày sinh:</label>
                 <div class="col-sm-10">
-                    <p class="form-control-static">01/01/2000</p>
+                    <p class="form-control-static">@Model.BirthDate.ToString("dd/MM/yyyy")</p>
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="control-label col-sm-2" for="">Email:</label>
                 <div class="col-sm-10">
-                    <p class="form-control-static">nguyentheanh@gmail.com</p>
+                    <p class="form-control-static">@Model.Email</p>
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="control-label col-sm-2" for="">Ảnh đại diện:</label>
                 <div class="col-sm-10">
-                    <img style="width:70px;height:70px;" src="../Themes/dist/img/avatar.png" class="user-image" alt="User Image">
+                    <img style="width:70px;height:70px;" src=@Model.Photo class="user-image" alt="User Image">
                 </div>
             </div>
 

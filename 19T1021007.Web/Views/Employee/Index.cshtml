@@ -43,7 +43,7 @@
             var url = $("#formSearch").prop("action");
             var postData = $("#formSearch").serializeArray();
             postData.push({ "name": "page", "value": page });
-
+            console.log(url);
             $.ajax({
                 url: url,
                 type: "POST",
@@ -53,6 +53,7 @@
                 },
                 success: function (data) {
                     $("#searchResult").html(data);
+                    //console.log(data);
                 }
             });
 

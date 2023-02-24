@@ -51,13 +51,14 @@ namespace _19T1021007.Web.Controllers
         /// sửa người giao hàng
         /// </summary>
         /// <returns></returns>
-        public ActionResult Edit(string id)
+        public ActionResult Edit(int id = 0)
         {
+            if (id == 0)
+                return RedirectToAction("Index");
+            var data = CommonDataService.GetSupplier(id);
+            if (data == null)
+                return RedirectToAction("Index");
             ViewBag.Title = "Cập nhập người giao hàng";
-
-            int ShipperID = Convert.ToInt32(id);
-
-            var data = CommonDataService.GetShipper(ShipperID);
             return View(data);
         }
         /// <summary>
@@ -81,8 +82,31 @@ namespace _19T1021007.Web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Save(Shipper data)
         {
+            if (string.IsNullOrWhiteSpace(data.ShipperName))
+            {
+                ModelState.AddModelError(nameof(data.ShipperName), "Tên người giao hàng không được để trống");
+            }
+            if (string.IsNullOrWhiteSpace(data.Phone))
+            {
+                ModelState.AddModelError(nameof(data.Phone), "Số điện thoại không được để trống");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                if (data.ShipperID == 0)
+                {
+                    ViewBag.Title = "Bổ sung người giao hàng";
+                }
+                else
+                {
+                    ViewBag.Title = "Cập nhập người giao hàng";
+                }
+                return View("Edit", data);
+            }
+
             if (data.ShipperID == 0)
             {
                 CommonDataService.AddShipper(data);

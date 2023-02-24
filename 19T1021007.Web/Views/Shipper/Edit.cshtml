@@ -6,18 +6,21 @@
     <div class="box box-body">
         @*form*@
         <form class="form-horizontal" action="~/Shipper/Save" method="post">
-            <input type="hidden" name="ShipperID" value="@Model.ShipperID" />
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.ShipperID)
             <div class="form-group">
                 <label class="control-label col-sm-2" for="">Tên người giao hàng:</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" value="@Model.ShipperName" name="ShipperName" autofocus>
+                    @Html.TextBoxFor(m => m.ShipperName, new { @class = "form-control", @autofocus = "autofocus" })
+                    @Html.ValidationMessageFor(m => m.ShipperName, "", new { @style = "color:red;" })
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="control-label col-sm-2" for="">Số điện thoại:</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" value="@Model.Phone" name="Phone"> 
+                    @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", @autofocus = "autofocus" })
+                    @Html.ValidationMessageFor(m => m.Phone, "", new { @style = "color:red;" })
                 </div>
             </div>
 
