@@ -1,5 +1,6 @@
 ﻿using _19T1021007.BusinessLayers;
 using _19T1021007.DomainModels;
+using _19T1021007.Web.Codes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -85,34 +86,52 @@ namespace _19T1021007.Web.Controllers
         /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Save(Employee data)
+        public ActionResult Save(Employee data, string birthday, HttpPostedFileBase uploadPhoto)
         {
-            if (string.IsNullOrWhiteSpace(data.FirstName))
+
+            if (string.IsNullOrWhiteSpace(birthday))
             {
-                ModelState.AddModelError(nameof(data.FirstName), "Họ không được để trống");
+                ModelState.AddModelError("BirthDate", "Ngày  sinh không được để trống");
             }
+            else
+            {
+                DateTime? d = SelectListComerce.DMYStringToDateTime(birthday);
+                if (d == null)
+                    ModelState.AddModelError("BirthDate", $"ngày {birthday} sinh không hợp lệ");
+                else
+                    data.BirthDate = d.Value;
+            }
+            // Kiểm soát đầu vào có hợp lệ hay không
             if (string.IsNullOrWhiteSpace(data.LastName))
+                ModelState.AddModelError("LastName", " Họ không được để trống");
+            if (string.IsNullOrWhiteSpace(data.FirstName))
+                ModelState.AddModelError("FirstName", "Tên không được để trống");
+            /* if (string.IsNullOrWhiteSpace(string.Format("{0:dd/MM/yyyy}", Convert.ToString(data.BirthDate))))
+                 ModelState.AddModelError("BirthDate", "ngày sinh không được để trống");*/
+            if (string.IsNullOrWhiteSpace(data.Email))
+                ModelState.AddModelError("Email", "Email không được để trống");
+            if (string.IsNullOrWhiteSpace(data.Photo))
+                /* ModelState.AddModelError("Photo", "Ảnh không được để trống");*/
+                data.Photo = "";
+            if (string.IsNullOrWhiteSpace(data.Notes))
+                ModelState.AddModelError("Notes", "ghi chú không được để trống");
+            if (uploadPhoto != null)
             {
-                ModelState.AddModelError(nameof(data.LastName), "Tên không được để trống");
+                // lưu file vào đường dẫn vật lý, đường dẫn ảo
+                string path = Server.MapPath("~/Photo");
+                string fileName = $"{DateTime.Now.Ticks}_{uploadPhoto.FileName}";
+                string filePath = System.IO.Path.Combine(path, fileName);// phép cộng chuỗi
+                uploadPhoto.SaveAs(filePath);
+                data.Photo = fileName;
             }
-            
-            
-            data.Notes = data.Notes ?? "";
-            data.Photo = "Images\\" + data.Photo ?? "http://dummyimage.com/140x180.png/cc0000/ffffff&text=EmployeePhoto";
-            data.Email = data.Email ?? "";
 
             if (!ModelState.IsValid)
             {
-                if (data.EmployeeID == 0)
-                {
-                    ViewBag.Title = "Bổ sung nhân viên";
-                }
-                else
-                {
-                    ViewBag.Title = "Cập nhập nhân viên";
-                }
+                ViewBag.Title = data.EmployeeID == 0 ? "Bổ sung nhân viên" : "Cập nhật nhân viên";
                 return View("Edit", data);
             }
+
+
 
             if (data.EmployeeID == 0)
             {

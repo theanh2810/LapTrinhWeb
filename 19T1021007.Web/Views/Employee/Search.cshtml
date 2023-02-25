@@ -27,9 +27,16 @@
 
                     <td>@item.FirstName </td>
                     <td>@item.LastName</td>
-                    <td>@item.BirthDate.ToString("dd/MM/yyyy")</td>
+                    <td>@string.Format("{0:dd-MM-yyyy}", item.BirthDate)</td>
                     @* <td ><img src="~/Themes/dist/img/user2-160x160.jpg" style="width:60px; text-align:center"></td>*@
-                    <td><img style="width:50px;height:50px;border-radius:6px" src="@item.Photo" alt="avatar" /></td>
+                    <td>
+                        @if (item.Photo.Contains("http"))
+                        {
+                            <img style="width:100px;height:100px;border-radius:6px" src="@item.Photo" alt="avatar" />
+                        }
+                        else
+                        { <img style="width:100px;height:100px;border-radius:6px" src="~/Photo/@item.Photo" alt="avatar" />}
+                    </td>
                     <td>@item.Notes </td>
                     <td>@item.Email</td>
 
