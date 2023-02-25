@@ -32,7 +32,7 @@ namespace _19T1021007.DataLayers.SQLServer
             using(var cn = OpenConnection())
             {
                 SqlCommand cmd = new SqlCommand();
-                cmd.CommandText = @"SELECT * FROM Employee WHERE Email = @Email and Password = @Password";
+                cmd.CommandText = @"SELECT * FROM Employees WHERE Email = @Email and Password = @Password";
                 cmd.CommandType = CommandType.Text;
                 cmd.Connection = cn;
                 cmd.Parameters.AddWithValue("@Email", userName);
