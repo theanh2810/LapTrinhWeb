@@ -9,6 +9,7 @@ using System.Web.UI;
 
 namespace _19T1021007.Web.Controllers
 {
+    [Authorize]
     public class CustomerController : Controller
     {
         private const int PAGE_SIZE = 10;

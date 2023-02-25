@@ -1,6 +1,6 @@
 ﻿using _19T1021007.BusinessLayers;
 using _19T1021007.DomainModels;
-using _19T1021007.Web.Codes;
+using _19T1021007.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +9,7 @@ using System.Web.Mvc;
 
 namespace _19T1021007.Web.Controllers
 {
+    [Authorize]
     public class EmployeeController : Controller
     {
         private const int PAGE_SIZE = 10;

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace _19T1021007.Web.Codes
+namespace _19T1021007.Web
 {
     public class SelectListComerce
     {

@@ -46,7 +46,7 @@
             <div class="form-group">
                 <label class="control-label col-sm-2">Ảnh đại diện:</label>
                 <div class="col-sm-10">
-                    <img src="~/Photo/@Model.Photo" id="photo" style="width:100px; height:100px" />
+                    <img src="~/Photo/@Model.Photo" id="photo" style="width:100px; height:100px; border:hidden;" />
                     @Html.HiddenFor(m => m.Photo)
                     @**@
                     <input type="file" name="uploadPhoto" onchange="document.getElementById('photo').src = window.URL.createObjectURL(this.files[0])" />
