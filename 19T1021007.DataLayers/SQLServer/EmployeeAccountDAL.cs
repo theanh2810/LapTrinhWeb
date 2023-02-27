@@ -47,6 +47,7 @@ namespace _19T1021007.DataLayers.SQLServer
                         UserName = Convert.ToString(dbReader["Email"]),
                         FullName = fullname,
                         Email = Convert.ToString(dbReader["Email"]),
+                        Photo = Convert.ToString(dbReader["Photo"]),
                         Password = "",
                         RoleNames = ""
                     };
@@ -66,7 +67,24 @@ namespace _19T1021007.DataLayers.SQLServer
 
         public bool ChangePassword(string userName, string oldPassword, string newPassword)
         {
-            throw new NotImplementedException();
+            bool result = false;
+            using (SqlConnection cn = OpenConnection())
+            {
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandText = @"UPDATE Employees
+                                    SET Password = @newPassword
+                                    WHERE Email = @Email and Password = @oldPassword";
+                cmd.CommandType = CommandType.Text;
+                cmd.Connection = cn;
+                cmd.Parameters.AddWithValue("@newPassword", newPassword);
+                cmd.Parameters.AddWithValue("@oldPassword", oldPassword);
+                cmd.Parameters.AddWithValue("@Email", userName);
+
+                result = cmd.ExecuteNonQuery() > 0;
+
+                cn.Close();
+            }
+            return result;
         }
     }
 }
