@@ -1,4 +1,5 @@
-﻿using System;
+﻿using _19T1021007.DomainModels;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -19,6 +20,11 @@ namespace _19T1021007.Web
             {
                 return null;
             }
+        }
+
+        public static UserAccount CookieToUserAccount(string value) 
+        { 
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<UserAccount>(value);   
         }
     }
 }
