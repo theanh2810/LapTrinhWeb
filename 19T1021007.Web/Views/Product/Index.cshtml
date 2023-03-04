@@ -1,5 +1,5 @@
 ﻿
-@model _19T1021007.Web.Models.PaginationSearchInput
+@model _19T1021007.Web.Models.ProductSearchInput
 @{
     ViewBag.Title = "Mặt hàng";
 }
@@ -23,7 +23,7 @@
                     </select>
                 </div>
                 <div class="col-sm-3">
-                    <select class="form-control" name="category">
+                    <select class="form-control" name="supplier">
                         <option>-- Nhà cung cấp --</option>
                         @{
                             var listSupplier = _19T1021007.BusinessLayers.CommonDataService.ListOfSuppliers();

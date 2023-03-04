@@ -285,7 +285,7 @@ namespace _19T1021007.DataLayers.SQLServer
 
             if (searchValue != "")
                 searchValue = "%" + searchValue + "%";
-
+            
             using (SqlConnection cn = OpenConnection())
             {
                 SqlCommand cmd = new SqlCommand();
@@ -296,8 +296,9 @@ namespace _19T1021007.DataLayers.SQLServer
 	                                    FROM	Products 
 	                                    WHERE	(@SearchValue = N'')
 	                                        OR	(
-			                                       (ProductName LIKE @SearchValue)
-			                                    
+			                                       (ProductName LIKE @SearchValue) OR
+			                                        (CategoryID = @CategoryID) OR
+                                                    (SupplierID = @SupplierID)
 		                                        )
                                     ) AS t
                                     WHERE (@PageSize = 0) OR (t.RowNumber BETWEEN (@Page - 1) * @PageSize + 1 AND @Page * @PageSize)";
@@ -305,8 +306,10 @@ namespace _19T1021007.DataLayers.SQLServer
                 cmd.Connection = cn;
 
                 cmd.Parameters.AddWithValue("@Page", page);
-                cmd.Parameters.AddWithValue("@PageSize", pageSize);
+                cmd.Parameters.AddWithValue("@PageSize", 7);
                 cmd.Parameters.AddWithValue("@SearchValue", searchValue);
+                cmd.Parameters.AddWithValue("@CategoryID", categoryID);
+                cmd.Parameters.AddWithValue("@SupplierID", supplierID);
 
                 var dbReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
                 while (dbReader.Read())

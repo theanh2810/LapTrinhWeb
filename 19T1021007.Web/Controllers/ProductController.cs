@@ -21,17 +21,19 @@ namespace _19T1021007.Web.Controllers
         /// Tìm kiếm, hiển thị mặt hàng dưới dạng phân trang
         /// </summary>
         /// <returns></returns>
-        public ActionResult Index()
+        public ActionResult Index(int category = 0, int supplier = 0)
         {
-            Models.PaginationSearchInput condition = Session[PRODUCT_SEARCH] as Models.PaginationSearchInput;
+            Models.ProductSearchInput condition = Session[PRODUCT_SEARCH] as Models.ProductSearchInput;
 
             if (condition == null)
             {
-                condition = new Models.PaginationSearchInput()
+                condition = new Models.ProductSearchInput()
                 {
                     Page = 1,
                     PageSize = PAGE_SIZE,
                     SearchValue = "",
+                    categoryID = category,
+                    supplierID = supplier
                 };
             };
 
@@ -234,15 +236,15 @@ namespace _19T1021007.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        public ActionResult Search(Models.PaginationSearchInput condition)
+        public ActionResult Search(Models.ProductSearchInput condition, int category = 0, int supplier = 0)
         {
             int rowCount = 0;
-            var data = ProductDataService.ListProducts(condition.Page, condition.PageSize, condition.SearchValue,0,0, out rowCount);
+            var data = ProductDataService.ListProducts(condition.Page, condition.PageSize, condition.SearchValue, category, supplier, out rowCount);
             //int page, int pageSize, string searchValue, int categoryID, int supplierID, out int rowCount
             var result = new Models.ProductSearchOutput()
             {
                 Page = condition.Page,
-                PageSize = condition.PageSize,
+                PageSize = 7,
                 SearchValue = condition.SearchValue,
                 RowCount = rowCount,
                 Data = data
