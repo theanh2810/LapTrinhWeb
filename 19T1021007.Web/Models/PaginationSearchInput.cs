@@ -45,4 +45,23 @@ namespace _19T1021007.Web.Models
         public int supplierID { get; set; }
 
     }
+    public class OrderSearchInput
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        public int Page { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public int PageSize { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string SearchValue { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public int Status { get; set; }
+    }
 }
